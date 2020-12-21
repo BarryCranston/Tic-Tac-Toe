@@ -23,20 +23,20 @@ class Tic_Tac_Toe():
         self.window.title('Tic-Tac-Toe')
         self.canvas = Canvas(self.window, width=size_of_board, height=size_of_board)
         self.canvas.pack()
-        # Input from user in form of clicks
+        
+        # Input from user in form of clicks -  bind the window to the click events
         self.window.bind('<Button-1>', self.click)
 
+        #initialise the board and a bunch of starting variables
         self.initialize_board()
         self.player_X_turns = True
         self.board_status = np.zeros(shape=(3, 3))
-
         self.player_X_starts = True
         self.reset_board = False
         self.gameover = False
         self.tie = False
         self.X_wins = False
         self.O_wins = False
-
         self.X_score = 0
         self.O_score = 0
         self.tie_score = 0
@@ -45,6 +45,7 @@ class Tic_Tac_Toe():
         self.window.mainloop()
 
     def initialize_board(self):
+        #draw the board on the canvas
         for i in range(2):
             self.canvas.create_line((i + 1) * size_of_board / 3, 0, (i + 1) * size_of_board / 3, size_of_board)
 
@@ -52,6 +53,7 @@ class Tic_Tac_Toe():
             self.canvas.create_line(0, (i + 1) * size_of_board / 3, size_of_board, (i + 1) * size_of_board / 3)
 
     def play_again(self):
+        #restart - draw the board but keep the scores
         self.initialize_board()
         self.player_X_starts = not self.player_X_starts
         self.player_X_turns = self.player_X_starts
@@ -63,6 +65,7 @@ class Tic_Tac_Toe():
     # ------------------------------------------------------------------
 
     def draw_O(self, logical_position):
+        #Define how the "O" is drawn on the canvas
         logical_position = np.array(logical_position)
         # logical_position = grid value on the board
         # grid_position = actual pixel values of the center of the grid
@@ -72,6 +75,7 @@ class Tic_Tac_Toe():
                                 outline=symbol_O_color)
 
     def draw_X(self, logical_position):
+        #define how the "x" is drawn on the canvas
         grid_position = self.convert_logical_to_grid_position(logical_position)
         self.canvas.create_line(grid_position[0] - symbol_size, grid_position[1] - symbol_size,
                                 grid_position[0] + symbol_size, grid_position[1] + symbol_size, width=symbol_thickness,
@@ -81,7 +85,7 @@ class Tic_Tac_Toe():
                                 fill=symbol_X_color)
 
     def display_gameover(self):
-
+        #record the updated scores
         if self.X_wins:
             self.X_score += 1
             text = 'Winner: Player 1 (X)'
@@ -102,6 +106,7 @@ class Tic_Tac_Toe():
         self.canvas.create_text(size_of_board / 2, 5 * size_of_board / 8, font="cmr 40 bold", fill=Green_color,
                                 text=score_text)
 
+        #Display the game info on the screen
         score_text = 'Player 1 (X) : ' + str(self.X_score) + '\n'
         score_text += 'Player 2 (O): ' + str(self.O_score) + '\n'
         score_text += 'Tie                    : ' + str(self.tie_score)
@@ -127,6 +132,9 @@ class Tic_Tac_Toe():
         return np.array(grid_position // (size_of_board / 3), dtype=int)
 
     def is_grid_occupied(self, logical_position):
+        
+        #check to see if someone has already put a marker in that position
+
         if self.board_status[logical_position[0]][logical_position[1]] == 0:
             return False
         else:
